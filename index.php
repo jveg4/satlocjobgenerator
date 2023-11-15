@@ -68,20 +68,25 @@
     </div>
 
     <div id="formSection" class="container">
-        <form id="uploadForm" enctype="multipart/form-data">
-            <label>Select KML File:</label>
-            <input type="file" name="kmlFile" class="form-control" required>
-            <label for="jobNumber">Select Job Number:</label>
-            <select name="jobNumber" id="jobNumber" class="form-control">
-                <?php
-                for ($i = 1; $i <= 999; $i++) {
-                    echo "<option value='$i'>$i</option>";
-                }
-                ?>
-            </select>
-            <button type="submit" class="btn btn-primary">Upload and Process</button>
-          
-        </form>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <label>Select KML File:</label>
+        <input type="file" name="kmlFile" class="form-control" required>
+
+        <label for="jobNumber">Select Job Number:</label>
+        <select name="jobNumber" id="jobNumber" class="form-control">
+            <?php
+            for ($i = 1; $i <= 999; $i++) {
+                echo "<option value='$i'>$i</option>";
+            }
+            ?>
+        </select>
+
+        <!-- Updated text input with id="jobname" -->
+        <label for="jobname">Job Name:</label>
+        <input type="text" name="jobName" id="jobName" class="form-control" required>
+<br>
+        <button type="submit" class="btn btn-primary">Upload and Process</button>
+    </form>
 
         <div id="progress" style="display: none;">Processing...</div>
         <div id="result" style="display: none;"></div>
