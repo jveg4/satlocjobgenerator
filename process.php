@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['kmlFile']) && isset(
     try {
         $uploaded_file = $_FILES['kmlFile'];
         $selected_job_number = filter_var($_POST['jobNumber'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-        $selected_job_name = htmlspecialchars($_POST['jobName']); // Sanitize job name
+        $selected_job_name = strtoupper(htmlspecialchars($_POST['jobName'])); // Sanitize job name
 
         $upload_dir = __DIR__ . '/uploads/';
         $download_dir = __DIR__ . '/downloads/';
