@@ -16,12 +16,13 @@ function extract_coordinates($coordinates_element) {
     return $result;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['kmlFile']) && isset($_POST['jobNumber'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['kmlFile']) && isset($_POST['jobNumber']) && isset($_POST['jobName'])) {
     $alert = ''; // Initialize alert message
 
     try {
         $uploaded_file = $_FILES['kmlFile'];
         $selected_job_number = filter_var($_POST['jobNumber'], FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+        $selected_job_name = htmlspecialchars($_POST['jobName']); // Sanitize job name
 
         $upload_dir = __DIR__ . '/uploads/';
         $download_dir = __DIR__ . '/downloads/';
@@ -45,7 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['kmlFile']) && isset(
         if (move_uploaded_file($uploaded_file['tmp_name'], $kml_dest_path)) {
             $dom = new DOMDocument();
             if ($dom->load($kml_dest_path)) {
-                $satloc_job = [".JOB " . $selected_job_number, ".VERSION 2", ""];
+                // Construct SATLOC job file content with job name
+                $satloc_job = [".JOB " . $selected_job_number . ' ' . $selected_job_name, ".VERSION 2", ""];
 
                 $placemarks = $dom->getElementsByTagName('Placemark');
                 $polygon_number = 1; // Initialize with 1
@@ -69,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['kmlFile']) && isset(
                         }
                     }
                 }
-                
+
                 $job_content = implode("\n", $satloc_job);
 
                 $job_folder = $download_dir . $unique_folder_id . '/';
@@ -106,5 +108,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['kmlFile']) && isset(
         error_log("An error occurred: " . $e->getMessage());
         echo "An error occurred. Please try again later.";
     }
+} else {
+    $alert = "Invalid request. Please make sure to submit all required parameters.";
+    echo $alert;
 }
 ?>
